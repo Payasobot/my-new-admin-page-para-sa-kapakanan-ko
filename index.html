@@ -111,7 +111,8 @@
           }
 
           Object.values(data).forEach(item => {
-            const msg = item.message;
+            const msg = item.message || item;
+
             list.innerHTML += `
               <div class="reply-card">
                 <p><strong>Pangalan:</strong> ${msg.name || "Anonymous"}</p>
