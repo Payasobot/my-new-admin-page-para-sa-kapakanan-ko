@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Receiver Admin (Test Mode)</title>
+  <title>Receiver Admin</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -56,7 +56,7 @@
 </head>
 <body>
   <div class="box">
-    <h2>🔒 Receiver Admin (Test)</h2>
+    <h2>🔒 Receiver Admin</h2>
 
     <div id="loginSection">
       <input type="password" id="adminPass" placeholder="Enter Password" />
@@ -65,26 +65,50 @@
 
     <div id="replies">
       <h3>📩 Received Replies</h3>
-      <div id="replyList">
-        <div class="reply">Test reply #1</div>
-        <div class="reply">Test reply #2</div>
-      </div>
+      <div id="replyList">Loading replies...</div>
     </div>
   </div>
 
   <script>
-    const PASSWORD = "1234ren"; // <- Ito ang password mo ngayon
+    const PASSWORD = "1234ren"; // Admin password mo
+    const DATABASE_URL = "https://confession-receiver-default-rtdb.firebaseio.com/replies.json";
 
     function login() {
       const inputPass = document.getElementById("adminPass").value.trim();
       if (inputPass === PASSWORD) {
         document.getElementById("loginSection").style.display = "none";
         document.getElementById("replies").style.display = "block";
-        alert("✅ Login successful!");
+        loadReplies();
       } else {
         alert("❌ Incorrect password!");
+      }
+    }
+
+    async function loadReplies() {
+      try {
+        const res = await fetch(DATABASE_URL);
+        const data = await res.json();
+
+        const replyList = document.getElementById("replyList");
+        replyList.innerHTML = "";
+
+        if (!data) {
+          replyList.innerHTML = "<p>No replies found yet.</p>";
+          return;
+        }
+
+        Object.values(data).forEach(reply => {
+          const div = document.createElement("div");
+          div.className = "reply";
+          div.textContent = reply.message || JSON.stringify(reply);
+          replyList.appendChild(div);
+        });
+      } catch (error) {
+        console.error(error);
+        document.getElementById("replyList").innerHTML = "<p>⚠️ Error loading replies.</p>";
       }
     }
   </script>
 </body>
 </html>
+
