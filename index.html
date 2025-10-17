@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Receiver Admin (Test Mode)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .box {
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 90%;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input[type="password"], button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1e40af;
+    }
+    #replies {
+      display: none;
+      margin-top: 20px;
+    }
+    .reply {
+      background: #e5e7eb;
+      padding: 10px;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>🔒 Receiver Admin (Test)</h2>
+
+    <div id="loginSection">
+      <input type="password" id="adminPass" placeholder="Enter Password" />
+      <button onclick="login()">Login</button>
+    </div>
+
+    <div id="replies">
+      <h3>📩 Received Replies</h3>
+      <div id="replyList">
+        <div class="reply">Test reply #1</div>
+        <div class="reply">Test reply #2</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PASSWORD = "1234ren"; // <- Ito ang password mo ngayon
+
+    function login() {
+      const inputPass = document.getElementById("adminPass").value.trim();
+      if (inputPass === PASSWORD) {
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("replies").style.display = "block";
+        alert("✅ Login successful!");
+      } else {
+        alert("❌ Incorrect password!");
+      }
+    }
+  </script>
+</body>
+</html>
