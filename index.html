@@ -1,114 +1,139 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Receiver Admin</title>
+  <title>🔒 Receiver Admin | Sekretong Malupet</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f3f4f6;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+      font-family: "Segoe UI", sans-serif;
+      background: #f4f5ff;
       margin: 0;
+      padding: 0;
     }
-    .box {
-      background: #fff;
-      padding: 20px 30px;
-      border-radius: 16px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      max-width: 500px;
-      width: 90%;
-    }
-    h2 {
+    header {
+      background: #2b2d42;
+      color: white;
       text-align: center;
-      margin-bottom: 20px;
+      padding: 16px;
     }
-    input[type="password"], button {
+    h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+    #loginSection, #repliesSection {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    input[type="password"] {
       width: 100%;
       padding: 10px;
-      margin: 10px 0;
-      border-radius: 8px;
+      font-size: 16px;
+      margin-top: 10px;
       border: 1px solid #ccc;
+      border-radius: 8px;
     }
     button {
-      background-color: #2563eb;
+      margin-top: 12px;
+      padding: 10px 16px;
+      font-size: 16px;
+      background: #2b2d42;
       color: white;
       border: none;
+      border-radius: 8px;
       cursor: pointer;
     }
     button:hover {
-      background-color: #1e40af;
+      background: #3d4173;
     }
-    #replies {
-      display: none;
-      margin-top: 20px;
-    }
-    .reply {
-      background: #e5e7eb;
-      padding: 10px;
-      border-radius: 8px;
+    .reply-card {
+      background: #fff0f6;
+      border-radius: 10px;
+      padding: 12px;
       margin: 10px 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .reply-card p {
+      margin: 5px 0;
+    }
+    .timestamp {
+      color: gray;
+      font-size: 13px;
+      margin-top: 4px;
     }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h2>🔒 Receiver Admin</h2>
+  <header>
+    <h1>🔒 Receiver Admin (Sekretong Malupet)</h1>
+  </header>
 
-    <div id="loginSection">
-      <input type="password" id="adminPass" placeholder="Enter Password" />
-      <button onclick="login()">Login</button>
-    </div>
+  <section id="loginSection">
+    <h3>Admin Login</h3>
+    <input type="password" id="adminPass" placeholder="Enter password..." />
+    <button onclick="login()">Login</button>
+  </section>
 
-    <div id="replies">
-      <h3>📩 Received Replies</h3>
-      <div id="replyList">Loading replies...</div>
-    </div>
-  </div>
+  <section id="repliesSection" style="display:none;">
+    <h3>📩 Received Replies</h3>
+    <div id="replyList">Loading...</div>
+  </section>
 
   <script>
-    const PASSWORD = "1234ren"; // Admin password mo
-    const DATABASE_URL = "https://confession-receiver-default-rtdb.firebaseio.com/replies.json";
+    const PASSWORD = "1234ren"; // palitan mo kung gusto mo ng iba
+    const DB_URL = "https://confession-receiver-default-rtdb.firebaseio.com/replies.json";
 
     function login() {
-      const inputPass = document.getElementById("adminPass").value.trim();
-      if (inputPass === PASSWORD) {
+      const input = document.getElementById("adminPass").value.trim();
+      if (input === PASSWORD) {
         document.getElementById("loginSection").style.display = "none";
-        document.getElementById("replies").style.display = "block";
+        document.getElementById("repliesSection").style.display = "block";
         loadReplies();
       } else {
-        alert("❌ Incorrect password!");
+        alert("Maling password 😅");
       }
     }
 
-    async function loadReplies() {
-      try {
-        const res = await fetch(DATABASE_URL);
-        const data = await res.json();
+    function loadReplies() {
+      fetch(DB_URL)
+        .then(res => res.json())
+        .then(data => {
+          const list = document.getElementById("replyList");
+          list.innerHTML = "";
 
-        const replyList = document.getElementById("replyList");
-        replyList.innerHTML = "";
+          if (!data) {
+            list.innerHTML = "<p>Wala pang replies 😅</p>";
+            return;
+          }
 
-        if (!data) {
-          replyList.innerHTML = "<p>No replies found yet.</p>";
-          return;
-        }
-
-        Object.values(data).forEach(reply => {
-          const div = document.createElement("div");
-          div.className = "reply";
-          div.textContent = reply.message || JSON.stringify(reply);
-          replyList.appendChild(div);
+          Object.values(data).forEach(item => {
+            const msg = item.message;
+            list.innerHTML += `
+              <div class="reply-card">
+                <p><strong>Pangalan:</strong> ${msg.name || "Anonymous"}</p>
+                <p><strong>May gusto sa klase?:</strong> ${msg.crushInClass || "-"}</p>
+                <p><strong>Crush name:</strong> ${msg.crushName || "-"}</p>
+                <p><strong>Tatanggap ng confess?:</strong> ${msg.acceptConfess || "-"}</p>
+                <p><strong>Ready magmahal ulit?:</strong> ${msg.readyLove || "-"}</p>
+                <p><strong>Interested sa relationship?:</strong> ${msg.interestedNow || "-"}</p>
+                <p><strong>May gusto sa tropa?:</strong> ${msg.crushFriend || "-"}</p>
+                <p><strong>Pangalan ng tropa:</strong> ${msg.crushFriendName || "-"}</p>
+                <p><strong>Mensahe:</strong> ${msg.message || "-"}</p>
+                <p><strong>Manliligaw kung may chance?:</strong> ${msg.willCourt || "-"}</p>
+                <p class="timestamp">${msg.timestamp || ""}</p>
+              </div>
+            `;
+          });
+        })
+        .catch(err => {
+          document.getElementById("replyList").innerHTML = "<p>Error loading replies 😥</p>";
+          console.error(err);
         });
-      } catch (error) {
-        console.error(error);
-        document.getElementById("replyList").innerHTML = "<p>⚠️ Error loading replies.</p>";
-      }
     }
   </script>
 </body>
 </html>
-
